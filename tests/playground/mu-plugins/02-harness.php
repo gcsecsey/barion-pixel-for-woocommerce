@@ -36,7 +36,12 @@ var SCENARIOS = [
     { name: 'Cookie Law Info legacy - accept',    query: 'cmp=cli',                  click: 'accept',  expect: [ 'grantConsent' ] },
     { name: 'Cookie Law Info legacy - decline',   query: 'cmp=cli',                  click: 'decline', expect: [ 'rejectConsent' ] },
     { name: 'No consent manager',                 query: 'cmp=none',                 click: null,      expect: [] },
-    { name: 'Late CMP, returning visitor, no click', query: 'cmp=cookieyes&late=1&prior=1', click: null, expect: [] }
+    { name: 'Late CMP, returning visitor, no click', query: 'cmp=cookieyes&late=1&prior=1', click: null, expect: [] },
+    // expectInits guards the other base pixel a Barion shop usually also runs.
+    // Two of them break tracking outright, and the second row is the control:
+    // without the off switch this same page really does init the pixel twice.
+    { name: 'Payment gateway pixel too - stays at one', query: 'cmp=none&gateway=1', click: null, expect: [], expectInits: 1 },
+    { name: 'Payment gateway pixel, off switch removed', query: 'cmp=none&gateway=1&nofilter=1', click: null, expect: [], expectInits: 2 }
 ];
 
 
@@ -96,13 +101,19 @@ async function run() {
         await wait( 400 );
 
         var got = consentCalls( win );
-        var init = ( win.__bpCalls || [] ).some( function ( c ) { return 'init' === c[ 0 ]; } );
+        var inits = ( win.__bpCalls || [] ).filter( function ( c ) { return 'init' === c[ 0 ]; } ).length;
+        var expected = s.expect;
+        var actual = got;
+        if ( undefined !== s.expectInits ) {
+            expected = { consent: s.expect, pixelInits: s.expectInits };
+            actual = { consent: got, pixelInits: inits };
+        }
         results.push( {
             name: s.name,
-            expected: s.expect,
-            got: got,
-            pass: JSON.stringify( got ) === JSON.stringify( s.expect ),
-            pixelInit: init,
+            expected: expected,
+            got: actual,
+            pass: JSON.stringify( actual ) === JSON.stringify( expected ),
+            pixelInit: inits,
             log: ( win.__bpLog || [] ).filter( function ( l ) { return l.indexOf( 'Barion Pixel' ) > -1; } )
         } );
         frame.remove();
