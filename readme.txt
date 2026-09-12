@@ -90,9 +90,9 @@ The Base Pixel (pageView) works without WooCommerce. Full event tracking (conten
 
 = I already use the Barion Payment Gateway plugin. Will this conflict? =
 
-No. A Barion gateway is a payment processor only — it doesn't implement Barion Pixel event tracking. Both plugins keep working together: that one handles payments, this one handles tracking.
+No. A Barion gateway implements the Base Pixel: it loads bp.js and sends the init event. It doesn't implement the Full Pixel, which is the e-commerce events Barion reviews an integration on (contentView, addToCart, initiateCheckout, purchase, setEncryptedEmail). That part is what this plugin adds, so both keep working together: that one handles payments, this one handles tracking.
 
-The gateway's optional Pixel ID field is worth clearing, though. Two copies of bp.js on one page stop events from reaching Barion altogether, so while a Pixel ID is configured here, Advanced Pixel for Barion switches the gateway's own pixel off and takes over the base pixel. It leaves the gateway's pixel alone if this plugin has no Pixel ID.
+Clear the gateway's optional Pixel ID field, though. Two copies of bp.js on one page stop events from reaching Barion altogether, so while a Pixel ID is configured here, Advanced Pixel for Barion switches the gateway's Base Pixel off and serves it instead. It leaves the gateway's pixel alone if this plugin has no Pixel ID.
 
 = Which cookie consent plugins are supported? =
 

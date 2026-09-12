@@ -83,7 +83,7 @@ Barion's own guides for setting up the pixel. The plugin's **Enable Full Pixel T
 ## Compatibility
 
 - **WooCommerce**: Required for full event tracking (base pixel works without it)
-- **Barion Payment Gateway**: Coexists — that plugin handles payments, this one handles pixel tracking and takes over its base pixel. Clear the Pixel ID in the gateway settings, see [Compatibility](docs/compatibility.md)
+- **Barion Payment Gateway**: Coexists — that plugin handles payments and implements the Base Pixel, this one adds the Full Pixel events and takes the Base Pixel over. Clear the Pixel ID in the gateway settings, see [Compatibility](docs/compatibility.md)
 - **Page caching**: Fully compatible (addToCart uses client-side JS)
 - **Cookie plugins**: CookieYes, Complianz, Cookiebot and Cookie Law Info work on their own. Any WP Consent API compatible plugin works once that plugin is active
 

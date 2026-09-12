@@ -46,11 +46,11 @@ page.
 999999 whenever its Pixel ID field is filled — whatever its own tracking setting
 says, and even with the gateway itself switched off. That is after everything
 this plugin can enqueue, so no JavaScript check can see it. This plugin therefore
-applies the gateway's own `woocommerce_barion_disable_tracking` filter and takes
-over the base pixel, but only while a Pixel ID is configured here. The filter has
-no other consumer in that plugin, and its pixel is base-only, so nothing is lost.
-A site that wants the gateway to keep the pixel can `remove_filter()` it and clear
-the Pixel ID here instead.
+applies the gateway's own `woocommerce_barion_disable_tracking` filter and serves
+the Base Pixel itself, but only while a Pixel ID is configured here. That filter
+has no other consumer in the gateway, and the gateway implements the Base Pixel
+and nothing beyond it, so nothing is lost. A site that wants the gateway to keep
+the pixel can `remove_filter()` it and clear the Pixel ID here instead.
 
 **Everything else.** Before loading `bp.js` the plugin checks `window.bp`. If any
 other source defined it first, the script load is skipped and only the `init`
